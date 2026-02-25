@@ -1,73 +1,95 @@
-# React + TypeScript + Vite
+#  Générateur de besoins en protéines
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Une application web interactive développée en **React js** permettant de générer dynamiquement un tableau de besoins journaliers en protéines en fonction du poids et des objectifs sportifs de l'utilisateur.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+##  Description
 
-## React Compiler
+Cette application permet à l'utilisateur de :
+- Sélectionner un ou plusieurs objectifs sportifs
+- Définir un poids minimum et maximum
+- Choisir le nombre de lignes à afficher
+- Générer automatiquement un tableau de besoins en protéines (en g/jour)
+- Exporter le tableau au format CSV
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## Installation
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Prérequis
+- [Node.js](https://nodejs.org/) version 18 ou supérieure
+- npm (inclus avec Node.js)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Étapes
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. **Cloner le repository**
+```bash
+git clone https://github.com/<ton-username>/<ton-repo>.git
+cd <ton-repo>
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+2. **Installer les dépendances**
+```bash
+npm install
 ```
+
+3. **Lancer le serveur de développement**
+```bash
+npm run dev
+```
+
+4. **Ouvrir l'application**
+
+Rendez-vous sur [http://localhost:5173](http://localhost:5173) dans votre navigateur.
+
+---
+
+##  Explication des composants
+
+### `src/types.ts`
+Définit les types TypeScript utilisés dans toute l'application :
+- `ObjectifId` — identifiant unique de chaque objectif
+- `Objectif` — structure d'un objectif (id, label, ratios min/max)
+- `Parametres` — paramètres saisis par l'utilisateur
+
+### `src/App.tsx`
+Composant racine de l'application. Il joue le rôle de chef d'orchestre :
+- Stocke les paramètres et objectifs dans son state
+- Passe la fonction `handleGenerer` à `ControlPanel`
+- Affiche `ProteinTable` et `ExportCSV` uniquement après génération
+
+### `src/components/ControlPanel.tsx`
+Panneau de contrôle de l'application. Il gère :
+- Les cases à cocher pour sélectionner les objectifs
+- Les inputs pour le poids minimum, maximum et le nombre de lignes
+- La validation des champs (erreurs affichées en rouge, bouton désactivé si invalide)
+
+### `src/components/ProteinTable.tsx`
+Composant d'affichage du tableau généré dynamiquement :
+- Calcule les poids à afficher en les répartissant uniformément entre le min et le max
+- Génère une colonne par objectif sélectionné
+- Affiche pour chaque cellule la plage de besoins en g/jour (ex: `60 – 80 g/jour`)
+
+### `src/components/ExportCSV.tsx`
+Composant permettant d'exporter le tableau en fichier `.csv` :
+- Génère le contenu CSV à partir des mêmes données que le tableau
+- Déclenche le téléchargement automatique du fichier `besoins_proteines.csv`
+
+---
+
+##  Recommandations nutritionnelles utilisées
+
+| Objectif | Besoin en protéines |
+|---|---|
+| Sédentaire | 0,8 – 1,0 g/kg/jour |
+| Endurance | 1,2 – 1,6 g/kg/jour |
+| Conservation de la masse musculaire | 1,6 – 1,8 g/kg/jour |
+| Prise de masse musculaire | 1,8 – 2,2 g/kg/jour |
+
+---
+
+##  Technologies utilisées
+
+- [React](https://react.dev/) — bibliothèque Javascript
+- [TypeScript](https://www.typescriptlang.org/) — typage statique

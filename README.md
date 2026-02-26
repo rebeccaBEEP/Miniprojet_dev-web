@@ -26,7 +26,7 @@ Cette application permet à l'utilisateur de :
 1. **Cloner le repository**
 ```bash
 git clone https://github.com/rebeccaBEEP/Miniprojet_dev-web.git
-cd <ton-repo>
+
 ```
 
 2. **Installer les dépendances**
